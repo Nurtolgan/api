@@ -1,0 +1,10 @@
+2023/03/17 13:53:36 [Error: Struct]: Key: 'Cv.User.Contacts.City' Error:Field validation for 'City' failed on the 'city' tag
+2023/03/17 13:55:15 [Error: Struct]: Key: 'Cv.User.Contacts.City' Error:Field validation for 'City' failed on the 'city' tag
+Key: 'Cv.Contacts.City' Error:Field validation for 'City' failed on the 'required' tag
+2023/03/17 13:59:06 [Error: Struct]: Key: 'Cv.User.Contacts.City' Error:Field validation for 'City' failed on the 'city' tag
+Key: 'Cv.Contacts.City' Error:Field validation for 'City' failed on the 'required' tag
+2023/03/17 13:59:46 [Error: Struct]: Key: 'Cv.Contacts.Phone_Number' Error:Field validation for 'Phone_Number' failed on the 'phone_number' tag
+2023/03/17 14:02:14 [Error: Struct]: Key: 'Cv.Contacts.Phone_Number' Error:Field validation for 'Phone_Number' failed on the 'phone_number' tag
+2023/03/17 14:03:00 [Error: Struct]: Key: 'Cv.User.Contacts.City' Error:Field validation for 'City' failed on the 'city' tag
+2023/03/17 14:18:37 [Error: Struct]: Key: 'Cv.Contacts.Last_Name' Error:Field validation for 'Last_Name' failed on the 'last_name' tag
+2023/03/17 14:21:58 [Error: Struct]: Key: 'Cv.Contacts.City' Error:Field validation for 'City' failed on the 'city' tag

@@ -16,12 +16,21 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 func insertUser(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
-	debugger.CheckError("ReadAll", err)
+
+	debugger.CheckError("Failed to read request body", err)
 
 	var cv mongo.Cv
-	debugger.CheckError("Unmarshal", json.Unmarshal(body, &cv))
-	mongo.CreateUserHandler(cv)
+	err = json.Unmarshal(body, &cv)
+	debugger.CheckError("Failed to parse request body", err)
+
+	err = cv.Validate()
+	debugger.CheckError("Invalid request body", err)
+
+	err = mongo.CreateUserHandler(cv)
+	debugger.CheckError("Failed to create user", err)
+    w.WriteHeader(http.StatusCreated)
 }
+
 
 func HandleRequest() {
 	r := mux.NewRouter()

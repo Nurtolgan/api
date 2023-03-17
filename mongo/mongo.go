@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	"api/debugger"
-
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+
 )
 
 func connectToMongo() (*mongo.Client, error) {
@@ -21,20 +21,21 @@ func connectToMongo() (*mongo.Client, error) {
 	return client, nil
 }
 
-// func CreateUserHandler(client *mongo.Client, cv *Cv) {
-// 	result, err := client.Database("Vladimir").Collection("Cvs").InsertOne(context.Background(), cv)
+// func CreateUserHandler(cv Cv) error {
+// 	client, err := connectToMongo()
+// 	debugger.CheckError("CreateUserHandler", err)
+// 	result, err := client.Database("Vladimir").Collection("Cv").InsertOne(context.Background(), cv)
 // 	debugger.CheckError("Insert One", err)
 // 	fmt.Println(result)
 // }
 
-
-func CreateUserHandler(cv Cv) {
-
+func CreateUserHandler(cv Cv) error {
 	client, err := connectToMongo()
 	debugger.CheckError("CreateUserHandler", err)
+
 	result, err := client.Database("Vladimir").Collection("Cv").InsertOne(context.Background(), cv)
 	debugger.CheckError("Insert One", err)
+
 	fmt.Println(result)
+	return nil
 }
-
-

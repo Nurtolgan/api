@@ -1,6 +1,9 @@
 package mongo
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+
+)
 
 type User struct {
 	ID             primitive.ObjectID `bson:"_id,omitempty"`
@@ -17,11 +20,11 @@ type User struct {
 }
 
 type Contacts struct {
-	First_Name   string `json:"first_name"`
-	Last_Name    string `json:"last_name"`
-	Phone_Number string `json:"phone_number"`
-	City         string `json:"city"`
-}
+	First_Name   string `json:"first_name" validate:"required,first_name"` 
+	Last_Name    string `json:"last_name" validate:"required,last_name"`
+	Phone_Number string `json:"phone_number" validate:"required,phone_number"`
+	City         string `json:"city" validate:"required,city"`
+}	
 
 type BaseInfo struct {
 	BirthdayDate       string `json:"birthday_date"`
