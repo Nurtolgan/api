@@ -1,19 +1,19 @@
 package mongo
 
 import (
-	"regexp"
 	"api/debugger"
+	"regexp"
+
 	"github.com/go-playground/validator/v10"
 )
 
 var validate *validator.Validate
 
-
 var (
-	firstNameRegex    = regexp.MustCompile(`^[a-zA-Z]+$`)
-	lastNameRegex    = regexp.MustCompile(`^[a-zA-Z]+$`)
-	phoneRegex = regexp.MustCompile(`^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$`)
-	cityRegex    = regexp.MustCompile(`^[a-zA-Z a-zA-Z]+$`)
+	firstNameRegex = regexp.MustCompile(`^[a-zA-Z ]+$`)
+	lastNameRegex  = regexp.MustCompile(`^[a-zA-Z]+$`)
+	phoneRegex     = regexp.MustCompile(`^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$`)
+	cityRegex      = regexp.MustCompile(`^[a-zA-Z a-zA-Z]+$`)
 )
 
 func firstNameValidator(fl validator.FieldLevel) bool {
@@ -25,7 +25,7 @@ func lastNameValidator(fl validator.FieldLevel) bool {
 }
 
 func phoneValidator(fl validator.FieldLevel) bool {
-    return phoneRegex.MatchString(fl.Field().String())
+	return phoneRegex.MatchString(fl.Field().String())
 }
 
 func cityValidator(fl validator.FieldLevel) bool {
@@ -33,28 +33,14 @@ func cityValidator(fl validator.FieldLevel) bool {
 }
 
 func (cv *Cv) Validate() error {
-    validate := validator.New()
-
-	if err := validate.RegisterValidation("first_name", firstNameValidator); err != nil {
-		debugger.CheckError("RegisterValidation", err)
-	}
-
-	if err := validate.RegisterValidation("last_name", lastNameValidator); err != nil {
-		debugger.CheckError("RegisterValidation", err)
-	}
-
-	if err := validate.RegisterValidation("phone_number", phoneValidator); err != nil {
-		debugger.CheckError("RegisterValidation", err)
-	}
-
-	if err := validate.RegisterValidation("city", cityValidator); err != nil {
-		debugger.CheckError("RegisterValidation", err)
-	}
+	validate := validator.New()
+	validate.RegisterValidation("first_name", firstNameValidator)
+	validate.RegisterValidation("last_name", lastNameValidator)
+	validate.RegisterValidation("phone_number", phoneValidator)
+	validate.RegisterValidation("city", cityValidator)
 
 	err := validate.Struct(cv)
-	debugger.CheckError("Struct", err)
+	debugger.CheckError("Struct Error", err)
 
 	return err
 }
-
-

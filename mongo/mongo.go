@@ -5,9 +5,10 @@ import (
 	"fmt"
 
 	"api/debugger"
+
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-
 )
 
 func connectToMongo() (*mongo.Client, error) {
@@ -21,21 +22,22 @@ func connectToMongo() (*mongo.Client, error) {
 	return client, nil
 }
 
-// func CreateUserHandler(cv Cv) error {
-// 	client, err := connectToMongo()
-// 	debugger.CheckError("CreateUserHandler", err)
-// 	result, err := client.Database("Vladimir").Collection("Cv").InsertOne(context.Background(), cv)
-// 	debugger.CheckError("Insert One", err)
-// 	fmt.Println(result)
-// }
-
 func CreateUserHandler(cv Cv) error {
 	client, err := connectToMongo()
 	debugger.CheckError("CreateUserHandler", err)
-
 	result, err := client.Database("Vladimir").Collection("Cv").InsertOne(context.Background(), cv)
-	debugger.CheckError("Insert One", err)
-
+	debugger.CheckError("Error CreateUserHandler", err)
 	fmt.Println(result)
 	return nil
+}
+
+func GetCVByUsername(username string) (Cv, error) {
+	client, err := connectToMongo()
+	debugger.CheckError("GetCVByUsername", err)
+
+	var cv Cv
+	err = client.Database("Vladimir").Collection("Cv").FindOne(context.Background(), bson.M{"user.username": username}).Decode(&cv)
+	debugger.CheckError("Error GetCVByUsername", err)
+
+	return cv, nil
 }
