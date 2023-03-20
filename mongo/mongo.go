@@ -7,9 +7,16 @@ import (
 	"api/debugger"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
+type Config struct {
+	Database       string `json:"database"`
+	DatabaseName   string `json:"databaseName"`
+	CollectionName string `json:"collectionName"`
+}
 
 func connectToMongo() (*mongo.Client, error) {
 
@@ -40,4 +47,36 @@ func GetCVByUsername(username string) (Cv, error) {
 	debugger.CheckError("Error GetCVByUsername", err)
 
 	return cv, nil
+}
+
+func DeleteUserById(id string) error {
+	client, err := connectToMongo()
+	debugger.CheckError("DeleteUserByUsername", err)
+
+	objectid, err := primitive.ObjectIDFromHex(id)
+	debugger.CheckError("Error OI from hex", err)
+
+	result, err := client.Database("Vladimir").Collection("Cv").DeleteOne(context.Background(), bson.M{"_id": objectid})
+	debugger.CheckError("Error DeleteUserByUsername", err)
+
+	fmt.Println(result)
+	return nil
+}
+
+func UpdateUserById(id string, cv Cv) error {
+	client, err := connectToMongo()
+	debugger.CheckError("UpdateUserById", err)
+
+	objectID, err := primitive.ObjectIDFromHex(id)
+	debugger.CheckError("Error creating ObjectID", err)
+
+	var filter = bson.M{"_id": objectID}
+	var update = bson.M{"$set": cv}
+
+	result, err := client.Database("Vladimir").Collection("Cv").UpdateOne(context.Background(), filter, update)
+	debugger.CheckError("Error updating document", err)
+
+	fmt.Printf("Updated %v Documents!\n", result.ModifiedCount)
+
+	return nil
 }
