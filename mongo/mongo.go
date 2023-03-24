@@ -12,15 +12,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type Config struct {
-	Database       string `json:"database"`
-	DatabaseName   string `json:"databaseName"`
-	CollectionName string `json:"collectionName"`
-}
-
 func connectToMongo() (*mongo.Client, error) {
 
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	clientOptions := options.Client().ApplyURI("mongodb+srv://ybyrashf:kES3qkm1K7yAdT6u@cluster0.2viowhf.mongodb.net/?retryWrites=true&w=majority")
 
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 
@@ -45,7 +39,7 @@ func GetCVByUsername(username string) (Cv, error) {
 	var cv Cv
 	err = client.Database("Vladimir").Collection("Cv").FindOne(context.Background(), bson.M{"user.username": username}).Decode(&cv)
 	debugger.CheckError("Error GetCVByUsername", err)
-
+	fmt.Println(cv)
 	return cv, nil
 }
 
@@ -76,7 +70,32 @@ func UpdateUserById(id string, cv Cv) error {
 	result, err := client.Database("Vladimir").Collection("Cv").UpdateOne(context.Background(), filter, update)
 	debugger.CheckError("Error updating document", err)
 
-	fmt.Printf("Updated %v Documents!\n", result.ModifiedCount)
+	fmt.Printf("Updated %v Document!\n", result.ModifiedCount)
 
 	return nil
+}
+
+func GetAllCvsByQuery(args ...string) ([]Cv, error) {
+	client, err := connectToMongo()
+	debugger.CheckError("GetAllCvsByQuery", err)
+
+	var cvs []Cv
+
+	cur, err := client.Database("Vladimir").Collection("Cv").Find(context.Background(),
+		bson.M{
+			"$and": []bson.M{
+				{"user.username": args[0]},
+				{"user.contacts.city": args[1]},
+				{"user.baseinfo.birthdaydate": args[2]},
+			},
+		})
+	debugger.CheckError("Error GetAllCvsByQuery", err)
+
+	for cur.Next(context.Background()) {
+		var cv Cv
+		err := cur.Decode(&cv)
+		debugger.CheckError("Error GetAllCvsByQuery", err)
+		cvs = append(cvs, cv)
+	}
+	return cvs, nil
 }

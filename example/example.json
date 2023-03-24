@@ -1,0 +1,58 @@
+{
+  "user": {
+      "username": "Ray",
+      "contacts": {
+          "first_name": "Max",
+          "last_name": "Doe",
+          "phone_number": "555123499",
+          "city": "New York"
+      },
+      "base_info": {
+          "birthday_date": "1990-01-01",
+          "gender": true,
+          "haveworkexperience": true
+      },
+      "special": {
+          "careerobjective": "Software Engineer",
+          "payment": 100000
+      },
+      "work_experience": [
+          {
+              "workstart": "2018-01-01",
+              "worknow": true,
+              "workend": "",
+              "organization": "Acme Corp",
+              "position": "Software Engineer",
+              "responsibilities": "Developed web applications"
+          }
+      ],
+      "about": "I am a software engineer with 3 years of experience in web development.",
+      "skills": [
+          "Golang",
+          "JavaScript",
+          "HTML",
+          "CSS"
+      ],
+      "study": {
+          "level": "Bachelor's Degree",
+          "institutions": [
+              {
+                  "institution": "University of New York",
+                  "faculty": "Computer Science",
+                  "specialization": "Software Engineering",
+                  "endyear": 2017
+              }
+          ]
+      },
+      "languages": {
+          "nativelang": "English",
+          "foreignlanguages": [
+              {
+                  "foreignlanguage": "Spanish",
+                  "foreignlanguagelevel": "Intermediate"
+              }
+          ]
+      },
+      "employment": "Full-time"
+  }
+}

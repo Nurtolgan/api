@@ -2,7 +2,6 @@ package mongo
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
-
 )
 
 type User struct {
@@ -20,14 +19,14 @@ type User struct {
 }
 
 type Contacts struct {
-	First_Name   string `json:"first_name" validate:"required,first_name"` 
+	First_Name   string `json:"first_name" validate:"required,first_name"`
 	Last_Name    string `json:"last_name" validate:"required,last_name"`
 	Phone_Number string `json:"phone_number" validate:"required,phone_number"`
 	City         string `json:"city" validate:"required,city"`
-}	
+}
 
 type BaseInfo struct {
-	BirthdayDate       string `json:"birthday_date"`
+	BirthdayDate       string `json:"birthdaydate"`
 	Gender             bool   `json:"gender"`
 	HaveWorkExperience bool   `json:"haveworkexperience"`
 }
@@ -69,13 +68,5 @@ type ForeignLanguage struct {
 }
 
 type Cv struct {
-	User            User             `json:"user"`
-	Contacts        Contacts         `json:"contacts"`
-	BaseInfo        BaseInfo         `json:"base_info"`
-	Special         Special          `json:"special"`
-	WorkExperience  []WorkExperience `json:"work_experience"`
-	Study           Study            `json:"study"`
-	Institution     Institution      `json:"institution"`
-	Languages       Languages        `json:"languages"`
-	ForeignLanguage ForeignLanguage  `json:"foreign_language"`
+	User User `json:"user"`
 }

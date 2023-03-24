@@ -72,6 +72,20 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
+func showUsers(w http.ResponseWriter, r *http.Request) {
+	username := r.URL.Query().Get("username")
+	city := r.URL.Query().Get("city")
+	birthday_date := r.URL.Query().Get("birthday_date")
+	cvs, err := mongo.GetAllCvsByQuery(username, city, birthday_date)
+	debugger.CheckError("Failed to get users", err)
+
+	jsonBytes, err := json.Marshal(cvs)
+	debugger.CheckError("Failed to marshal json", err)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonBytes)
+}
+
 func HandleRequest() {
 	r := mux.NewRouter()
 	header := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
@@ -83,6 +97,6 @@ func HandleRequest() {
 	r.HandleFunc("/users/{username}", showAUser).Methods("GET")
 	r.HandleFunc("/delete/{id}", deleteUser).Methods("DELETE")
 	r.HandleFunc("/update/{id}", updateUser).Methods("PUT")
-	http.ListenAndServe(":8080", handlers.CORS(header, methods, origins)(r))
-
+	r.HandleFunc("/showusers", showUsers).Methods("GET")
+	debugger.CheckError("Listen and serve", http.ListenAndServe(":8000", handlers.CORS(header, methods, origins)(r)))
 }
