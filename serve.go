@@ -76,7 +76,8 @@ func showUsers(w http.ResponseWriter, r *http.Request) {
 	username := r.URL.Query().Get("username")
 	city := r.URL.Query().Get("city")
 	birthday_date := r.URL.Query().Get("birthday_date")
-	cvs, err := mongo.GetAllCvsByQuery(username, city, birthday_date)
+	careerobjective := r.URL.Query().Get("careerobjective")
+	cvs, err := mongo.GetAllCvsByQuery(username, city, birthday_date, careerobjective)
 	debugger.CheckError("Failed to get users", err)
 
 	jsonBytes, err := json.Marshal(cvs)

@@ -87,6 +87,7 @@ func GetAllCvsByQuery(args ...string) ([]Cv, error) {
 				{"user.username": args[0]},
 				{"user.contacts.city": args[1]},
 				{"user.baseinfo.birthdaydate": args[2]},
+				{"user.special.careerobjective": args[3]},
 			},
 		})
 	debugger.CheckError("Error GetAllCvsByQuery", err)
