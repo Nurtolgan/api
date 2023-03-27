@@ -5,10 +5,10 @@
           "first_name": "Max",
           "last_name": "Doe",
           "phone_number": "555123499",
-          "city": "New York"
+          "city": "Almaty"
       },
       "base_info": {
-          "birthday_date": "1990-01-01",
+          "birthdaydate": "1990-01-01",
           "gender": true,
           "haveworkexperience": true
       },

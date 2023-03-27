@@ -14,7 +14,7 @@ import (
 
 func connectToMongo() (*mongo.Client, error) {
 
-	clientOptions := options.Client().ApplyURI("mongodb+srv://ybyrashf:kES3qkm1K7yAdT6u@cluster0.2viowhf.mongodb.net/?retryWrites=true&w=majority")
+	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
 
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 
@@ -75,28 +75,75 @@ func UpdateUserById(id string, cv Cv) error {
 	return nil
 }
 
+// func GetAllCvsByQuery(args ...string) ([]Cv, error) {
+// 	client, err := connectToMongo()
+// 	debugger.CheckError("GetAllCvsByQuery", err)
+
+// 	var filter bson.M
+// 	if args[0] == "" && args[1] == "" && args[2] == "" && args[3] == "" {
+// 		filter = bson.M{}
+// 	} else {
+// 		filter = bson.M{
+// 			"$and": []bson.M{
+// 				{"user.username": args[0]},
+// 				{"user.contacts.city": args[1]},
+// 				{"user.baseinfo.birthdaydate": args[2]},
+// 				{"user.special.careerobjective": args[3]},
+// 			},
+// 		}
+// 	}
+
+// 	cur, err := client.Database("Vladimir").Collection("Cv").Find(context.Background(), filter)
+// 	debugger.CheckError("Error GetAllCvsByQuery", err)
+
+// 	var cvs []Cv
+// 	for cur.Next(context.Background()) {
+// 		var cv Cv
+// 		err := cur.Decode(&cv)
+// 		debugger.CheckError("Error GetAllCvsByQuery", err)
+// 		cvs = append(cvs, cv)
+// 	}
+
+// 	return cvs, nil
+// }
+
 func GetAllCvsByQuery(args ...string) ([]Cv, error) {
 	client, err := connectToMongo()
 	debugger.CheckError("GetAllCvsByQuery", err)
 
-	var cvs []Cv
+	var filter bson.M
 
-	cur, err := client.Database("Vladimir").Collection("Cv").Find(context.Background(),
-		bson.M{
-			"$and": []bson.M{
-				{"user.username": args[0]},
-				{"user.contacts.city": args[1]},
-				{"user.baseinfo.birthdaydate": args[2]},
-				{"user.special.careerobjective": args[3]},
-			},
-		})
+	if args[0] != "" || args[1] != "" || args[2] != "" || args[3] != "" {
+		filter = bson.M{
+			"$and": []bson.M{},
+		}
+
+		if args[0] != "" {
+			filter["$and"] = append(filter["$and"].([]bson.M), bson.M{"user.username": args[0]})
+		}
+		if args[1] != "" {
+			filter["$and"] = append(filter["$and"].([]bson.M), bson.M{"user.contacts.city": args[1]})
+		}
+		if args[2] != "" {
+			filter["$and"] = append(filter["$and"].([]bson.M), bson.M{"user.baseinfo.birthdaydate": args[2]})
+		}
+		if args[3] != "" {
+			filter["$and"] = append(filter["$and"].([]bson.M), bson.M{"user.special.careerobjective": args[3]})
+		}
+	} else {
+		filter = bson.M{}
+	}
+
+	cur, err := client.Database("Vladimir").Collection("Cv").Find(context.Background(), filter)
 	debugger.CheckError("Error GetAllCvsByQuery", err)
 
+	var cvs []Cv
 	for cur.Next(context.Background()) {
 		var cv Cv
 		err := cur.Decode(&cv)
 		debugger.CheckError("Error GetAllCvsByQuery", err)
 		cvs = append(cvs, cv)
 	}
+
 	return cvs, nil
 }

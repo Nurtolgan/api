@@ -72,12 +72,30 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
+// func showUsers(w http.ResponseWriter, r *http.Request) {
+// 	username := r.URL.Query().Get("username")
+// 	city := r.URL.Query().Get("city")
+// 	birthday_date := r.URL.Query().Get("birthdaydate")
+// 	careerobjective := r.URL.Query().Get("careerobjective")
+// 	cvs, err := mongo.GetAllCvsByQuery(username, city, birthday_date, careerobjective)
+// 	debugger.CheckError("Failed to get users", err)
+
+// 	jsonBytes, err := json.Marshal(cvs)
+// 	debugger.CheckError("Failed to marshal json", err)
+
+// 	w.Header().Set("Content-Type", "application/json")
+// 	w.Write(jsonBytes)
+// }
+
 func showUsers(w http.ResponseWriter, r *http.Request) {
-	username := r.URL.Query().Get("username")
-	city := r.URL.Query().Get("city")
-	birthday_date := r.URL.Query().Get("birthday_date")
-	careerobjective := r.URL.Query().Get("careerobjective")
-	cvs, err := mongo.GetAllCvsByQuery(username, city, birthday_date, careerobjective)
+	query := r.URL.Query()
+	args := []string{
+		query.Get("username"),
+		query.Get("city"),
+		query.Get("birthdaydate"),
+		query.Get("careerobjective"),
+	}
+	cvs, err := mongo.GetAllCvsByQuery(args...)
 	debugger.CheckError("Failed to get users", err)
 
 	jsonBytes, err := json.Marshal(cvs)
