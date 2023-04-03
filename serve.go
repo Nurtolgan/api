@@ -9,12 +9,27 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
+// @Summary index
+// @ID index
+// @Tags index
+// @Produce plain
+// @Success 200 {string} string "OK"
+// @Failure 400,404 {string} string "error"
+// @Router / [get]
 func index(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("API"))
 }
 
+// @Summary insertUser
+// @ID insertUser
+// @Tags insertUser
+// @Produce plain
+// @Success 200 {string} string "Created"
+// @Failure 400,404 {string} string "error"
+// @Router /insertUser [get]
 func insertUser(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	debugger.CheckError("Failed to read request body", err)
@@ -29,6 +44,13 @@ func insertUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
+// @Summary showAUser
+// @ID showAUser
+// @Tags showAUser
+// @Produce plain
+// @Success 200 {string} string "OK"
+// @Failure 400,404 {string} string "error"
+// @Router /users/{username} [get]
 func showAUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	username := vars["username"]
@@ -43,6 +65,13 @@ func showAUser(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonBytes)
 }
 
+// @Summary deleteUser
+// @ID deleteUser
+// @Tags deleteUser
+// @Produce plain
+// @Success 200 {string} string "OK"
+// @Failure 400,404 {string} string "error"
+// @Router /delete/{id} [delete]
 func deleteUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
@@ -53,6 +82,13 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// @Summary updateUser
+// @ID updateUser
+// @Tags updateUser
+// @Produce plain
+// @Success 200 {string} string "OK"
+// @Failure 400,404 {string} string "error"
+// @Router /update/{id} [put]
 func updateUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
@@ -72,21 +108,13 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
-// func showUsers(w http.ResponseWriter, r *http.Request) {
-// 	username := r.URL.Query().Get("username")
-// 	city := r.URL.Query().Get("city")
-// 	birthday_date := r.URL.Query().Get("birthdaydate")
-// 	careerobjective := r.URL.Query().Get("careerobjective")
-// 	cvs, err := mongo.GetAllCvsByQuery(username, city, birthday_date, careerobjective)
-// 	debugger.CheckError("Failed to get users", err)
-
-// 	jsonBytes, err := json.Marshal(cvs)
-// 	debugger.CheckError("Failed to marshal json", err)
-
-// 	w.Header().Set("Content-Type", "application/json")
-// 	w.Write(jsonBytes)
-// }
-
+// @Summary showUsers
+// @ID showUsers
+// @Tags showUsers
+// @Produce plain
+// @Success 200 {string} string "OK"
+// @Failure 400,404 {string} string "error"
+// @Router /showusers [get]
 func showUsers(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	args := []string{
@@ -107,6 +135,8 @@ func showUsers(w http.ResponseWriter, r *http.Request) {
 
 func HandleRequest() {
 	r := mux.NewRouter()
+	r.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
+
 	header := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
 	methods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS", "DELETE"})
 	origins := handlers.AllowedOrigins([]string{"*"})
@@ -117,5 +147,5 @@ func HandleRequest() {
 	r.HandleFunc("/delete/{id}", deleteUser).Methods("DELETE")
 	r.HandleFunc("/update/{id}", updateUser).Methods("PUT")
 	r.HandleFunc("/showusers", showUsers).Methods("GET")
-	debugger.CheckError("Listen and serve", http.ListenAndServe(":8000", handlers.CORS(header, methods, origins)(r)))
+	debugger.CheckError("Listen and serve", http.ListenAndServe(":8010", handlers.CORS(header, methods, origins)(r)))
 }

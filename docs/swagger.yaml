@@ -1,0 +1,135 @@
+basePath: /
+host: localhost:8010
+info:
+  contact: {}
+  description: This is a sample server Petstore server.
+  title: Swagger Example API
+  version: 1.0.0
+paths:
+  /:
+    get:
+      operationId: index
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: error
+          schema:
+            type: string
+        "404":
+          description: error
+          schema:
+            type: string
+      summary: index
+      tags:
+      - index
+  /delete/{id}:
+    delete:
+      operationId: deleteUser
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: error
+          schema:
+            type: string
+        "404":
+          description: error
+          schema:
+            type: string
+      summary: deleteUser
+      tags:
+      - deleteUser
+  /insertUser:
+    get:
+      operationId: insertUser
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: error
+          schema:
+            type: string
+        "404":
+          description: error
+          schema:
+            type: string
+      summary: insertUser
+      tags:
+      - insertUser
+  /showusers:
+    get:
+      operationId: showUsers
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: error
+          schema:
+            type: string
+        "404":
+          description: error
+          schema:
+            type: string
+      summary: showUsers
+      tags:
+      - showUsers
+  /update/{id}:
+    put:
+      operationId: updateUser
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: error
+          schema:
+            type: string
+        "404":
+          description: error
+          schema:
+            type: string
+      summary: updateUser
+      tags:
+      - updateUser
+  /users/{username}:
+    get:
+      operationId: showAUser
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: error
+          schema:
+            type: string
+        "404":
+          description: error
+          schema:
+            type: string
+      summary: showAUser
+      tags:
+      - showAUser
+swagger: "2.0"

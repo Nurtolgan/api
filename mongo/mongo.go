@@ -23,6 +23,7 @@ func connectToMongo() (*mongo.Client, error) {
 	return client, nil
 }
 
+
 func CreateUserHandler(cv Cv) error {
 	client, err := connectToMongo()
 	debugger.CheckError("CreateUserHandler", err)
@@ -75,29 +76,35 @@ func UpdateUserById(id string, cv Cv) error {
 	return nil
 }
 
+type FilterCv struct {
+	Username        string `json:"user.username"`
+	City            string `json:"user.contacts.city"`
+	Birthdaydate    string `json:"user.baseinfo.birthdaydate"`
+	Careerobjective string `json:"user.special.careerobjective"`
+}
+
 func GetAllCvsByQuery(args ...string) ([]Cv, error) {
 	client, err := connectToMongo()
 	debugger.CheckError("GetAllCvsByQuery", err)
 
 	var filter bson.M
+	filterParts := []bson.M{}
 
-	if args[0] != "" || args[1] != "" || args[2] != "" || args[3] != "" {
-		filter = bson.M{
-			"$and": []bson.M{},
+	for _, arg := range args {
+		if arg != "" {
+			filterParts = append(filterParts, bson.M{
+				"$or": []bson.M{
+					{"user.username": arg},
+					{"user.contacts.city": arg},
+					{"user.baseinfo.birthdaydate": arg},
+					{"user.special.careerobjective": arg},
+				},
+			})
 		}
+	}
 
-		if args[0] != "" {
-			filter["$and"] = append(filter["$and"].([]bson.M), bson.M{"user.username": args[0]})
-		}
-		if args[1] != "" {
-			filter["$and"] = append(filter["$and"].([]bson.M), bson.M{"user.contacts.city": args[1]})
-		}
-		if args[2] != "" {
-			filter["$and"] = append(filter["$and"].([]bson.M), bson.M{"user.baseinfo.birthdaydate": args[2]})
-		}
-		if args[3] != "" {
-			filter["$and"] = append(filter["$and"].([]bson.M), bson.M{"user.special.careerobjective": args[3]})
-		}
+	if len(filterParts) > 0 {
+		filter = bson.M{"$and": filterParts}
 	} else {
 		filter = bson.M{}
 	}

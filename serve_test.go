@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	
 )
 
 func readGetResponse(url string) []byte {
@@ -121,5 +122,13 @@ func TestUpdateUser(t *testing.T) {
 	b := readUpdateResponse("http://localhost:8000/update/641c83c2e1045e27dafbb107", "application/json", bytes.NewBuffer(cvJSON))
 	if string(b) != "" {
 		t.Errorf("Failed to update user")
+	}
+}
+
+func TestGetAllCvsByQuery(t *testing.T) {
+	b := readGetResponse("http://localhost:8010/showusers?query=Ray")
+	var cvs []mongo.Cv
+	if json.Unmarshal(b, &cvs) != nil {
+		t.Errorf("Failed to unmarshal json")
 	}
 }
