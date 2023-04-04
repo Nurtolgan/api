@@ -43,17 +43,29 @@
         },
         "/delete/{id}": {
             "delete": {
+                "description": "Delete a user by id",
                 "produces": [
                     "text/plain"
                 ],
                 "tags": [
-                    "deleteUser"
+                    "Delete user"
                 ],
                 "summary": "deleteUser",
                 "operationId": "deleteUser",
+                "parameters": [
+                    {
+                        "description": "json",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/mongo.Cv"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "success",
                         "schema": {
                             "type": "string"
                         }
@@ -74,18 +86,33 @@
             }
         },
         "/insertUser": {
-            "get": {
+            "post": {
+                "description": "Insert a new user",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "text/plain"
                 ],
                 "tags": [
-                    "insertUser"
+                    "Insert a new user"
                 ],
                 "summary": "insertUser",
-                "operationId": "insertUser",
+                "operationId": "CreateUserHandler",
+                "parameters": [
+                    {
+                        "description": "body json",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/mongo.Cv"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Created",
+                        "description": "User created",
                         "schema": {
                             "type": "string"
                         }
@@ -107,17 +134,23 @@
         },
         "/showusers": {
             "get": {
-                "produces": [
-                    "text/plain"
-                ],
+                "description": "Get all users or by query params (username, city, birthdaydate, careerobjective)",
                 "tags": [
-                    "showUsers"
+                    "Show users"
                 ],
-                "summary": "showUsers",
-                "operationId": "showUsers",
+                "summary": "Show Users with filter",
+                "operationId": "GetAllCvsByQuery",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "username",
+                        "name": "username",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "success",
                         "schema": {
                             "type": "string"
                         }
@@ -139,17 +172,29 @@
         },
         "/update/{id}": {
             "put": {
+                "description": "Update a user by id",
                 "produces": [
                     "text/plain"
                 ],
                 "tags": [
-                    "updateUser"
+                    "Update user"
                 ],
                 "summary": "updateUser",
-                "operationId": "updateUser",
+                "operationId": "Update user",
+                "parameters": [
+                    {
+                        "description": "json",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/mongo.Cv"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "success",
                         "schema": {
                             "type": "string"
                         }
@@ -171,17 +216,29 @@
         },
         "/users/{username}": {
             "get": {
+                "description": "Show a user by username",
                 "produces": [
                     "text/plain"
                 ],
                 "tags": [
-                    "showAUser"
+                    "Show a user"
                 ],
                 "summary": "showAUser",
                 "operationId": "showAUser",
+                "parameters": [
+                    {
+                        "description": "username",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/mongo.Cv"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "success",
                         "schema": {
                             "type": "string"
                         }
@@ -198,6 +255,187 @@
                             "type": "string"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "mongo.BaseInfo": {
+            "type": "object",
+            "properties": {
+                "birthdaydate": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "boolean"
+                },
+                "haveworkexperience": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "mongo.Contacts": {
+            "type": "object",
+            "required": [
+                "city",
+                "first_name",
+                "last_name",
+                "phone_number"
+            ],
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "phone_number": {
+                    "type": "string"
+                }
+            }
+        },
+        "mongo.Cv": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "$ref": "#/definitions/mongo.User"
+                }
+            }
+        },
+        "mongo.ForeignLanguage": {
+            "type": "object",
+            "properties": {
+                "foreignlanguage": {
+                    "type": "string"
+                },
+                "foreignlanguagelevel": {
+                    "type": "string"
+                }
+            }
+        },
+        "mongo.Institution": {
+            "type": "object",
+            "properties": {
+                "endyear": {
+                    "type": "integer"
+                },
+                "faculty": {
+                    "type": "string"
+                },
+                "institution": {
+                    "type": "string"
+                },
+                "specialization": {
+                    "type": "string"
+                }
+            }
+        },
+        "mongo.Languages": {
+            "type": "object",
+            "properties": {
+                "foreignlanguages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/mongo.ForeignLanguage"
+                    }
+                },
+                "nativelang": {
+                    "type": "string"
+                }
+            }
+        },
+        "mongo.Special": {
+            "type": "object",
+            "properties": {
+                "careerobjective": {
+                    "type": "string"
+                },
+                "payment": {
+                    "type": "integer"
+                }
+            }
+        },
+        "mongo.Study": {
+            "type": "object",
+            "properties": {
+                "institutions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/mongo.Institution"
+                    }
+                },
+                "level": {
+                    "type": "string"
+                }
+            }
+        },
+        "mongo.User": {
+            "type": "object",
+            "properties": {
+                "about": {
+                    "type": "string"
+                },
+                "baseinfo": {
+                    "$ref": "#/definitions/mongo.BaseInfo"
+                },
+                "contacts": {
+                    "$ref": "#/definitions/mongo.Contacts"
+                },
+                "employment": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "languages": {
+                    "$ref": "#/definitions/mongo.Languages"
+                },
+                "skills": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "special": {
+                    "$ref": "#/definitions/mongo.Special"
+                },
+                "study": {
+                    "$ref": "#/definitions/mongo.Study"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "work_experience": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/mongo.WorkExperience"
+                    }
+                }
+            }
+        },
+        "mongo.WorkExperience": {
+            "type": "object",
+            "properties": {
+                "organization": {
+                    "type": "string"
+                },
+                "position": {
+                    "type": "string"
+                },
+                "responsibilities": {
+                    "type": "string"
+                },
+                "workend": {
+                    "type": "string"
+                },
+                "worknow": {
+                    "type": "boolean"
+                },
+                "workstart": {
+                    "type": "string"
                 }
             }
         }

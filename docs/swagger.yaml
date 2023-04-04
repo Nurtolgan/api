@@ -1,4 +1,122 @@
 basePath: /
+definitions:
+  mongo.BaseInfo:
+    properties:
+      birthdaydate:
+        type: string
+      gender:
+        type: boolean
+      haveworkexperience:
+        type: boolean
+    type: object
+  mongo.Contacts:
+    properties:
+      city:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      phone_number:
+        type: string
+    required:
+    - city
+    - first_name
+    - last_name
+    - phone_number
+    type: object
+  mongo.Cv:
+    properties:
+      user:
+        $ref: '#/definitions/mongo.User'
+    type: object
+  mongo.ForeignLanguage:
+    properties:
+      foreignlanguage:
+        type: string
+      foreignlanguagelevel:
+        type: string
+    type: object
+  mongo.Institution:
+    properties:
+      endyear:
+        type: integer
+      faculty:
+        type: string
+      institution:
+        type: string
+      specialization:
+        type: string
+    type: object
+  mongo.Languages:
+    properties:
+      foreignlanguages:
+        items:
+          $ref: '#/definitions/mongo.ForeignLanguage'
+        type: array
+      nativelang:
+        type: string
+    type: object
+  mongo.Special:
+    properties:
+      careerobjective:
+        type: string
+      payment:
+        type: integer
+    type: object
+  mongo.Study:
+    properties:
+      institutions:
+        items:
+          $ref: '#/definitions/mongo.Institution'
+        type: array
+      level:
+        type: string
+    type: object
+  mongo.User:
+    properties:
+      about:
+        type: string
+      baseinfo:
+        $ref: '#/definitions/mongo.BaseInfo'
+      contacts:
+        $ref: '#/definitions/mongo.Contacts'
+      employment:
+        type: string
+      id:
+        type: string
+      languages:
+        $ref: '#/definitions/mongo.Languages'
+      skills:
+        items:
+          type: string
+        type: array
+      special:
+        $ref: '#/definitions/mongo.Special'
+      study:
+        $ref: '#/definitions/mongo.Study'
+      username:
+        type: string
+      work_experience:
+        items:
+          $ref: '#/definitions/mongo.WorkExperience'
+        type: array
+    type: object
+  mongo.WorkExperience:
+    properties:
+      organization:
+        type: string
+      position:
+        type: string
+      responsibilities:
+        type: string
+      workend:
+        type: string
+      worknow:
+        type: boolean
+      workstart:
+        type: string
+    type: object
 host: localhost:8010
 info:
   contact: {}
@@ -29,12 +147,20 @@ paths:
       - index
   /delete/{id}:
     delete:
+      description: Delete a user by id
       operationId: deleteUser
+      parameters:
+      - description: json
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/mongo.Cv'
       produces:
       - text/plain
       responses:
         "200":
-          description: OK
+          description: success
           schema:
             type: string
         "400":
@@ -47,15 +173,25 @@ paths:
             type: string
       summary: deleteUser
       tags:
-      - deleteUser
+      - Delete user
   /insertUser:
-    get:
-      operationId: insertUser
+    post:
+      consumes:
+      - application/json
+      description: Insert a new user
+      operationId: CreateUserHandler
+      parameters:
+      - description: body json
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/mongo.Cv'
       produces:
       - text/plain
       responses:
         "200":
-          description: Created
+          description: User created
           schema:
             type: string
         "400":
@@ -68,15 +204,20 @@ paths:
             type: string
       summary: insertUser
       tags:
-      - insertUser
+      - Insert a new user
   /showusers:
     get:
-      operationId: showUsers
-      produces:
-      - text/plain
+      description: Get all users or by query params (username, city, birthdaydate,
+        careerobjective)
+      operationId: GetAllCvsByQuery
+      parameters:
+      - description: username
+        in: query
+        name: username
+        type: string
       responses:
         "200":
-          description: OK
+          description: success
           schema:
             type: string
         "400":
@@ -87,17 +228,25 @@ paths:
           description: error
           schema:
             type: string
-      summary: showUsers
+      summary: Show Users with filter
       tags:
-      - showUsers
+      - Show users
   /update/{id}:
     put:
-      operationId: updateUser
+      description: Update a user by id
+      operationId: Update user
+      parameters:
+      - description: json
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/mongo.Cv'
       produces:
       - text/plain
       responses:
         "200":
-          description: OK
+          description: success
           schema:
             type: string
         "400":
@@ -110,15 +259,23 @@ paths:
             type: string
       summary: updateUser
       tags:
-      - updateUser
+      - Update user
   /users/{username}:
     get:
+      description: Show a user by username
       operationId: showAUser
+      parameters:
+      - description: username
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/mongo.Cv'
       produces:
       - text/plain
       responses:
         "200":
-          description: OK
+          description: success
           schema:
             type: string
         "400":
@@ -131,5 +288,5 @@ paths:
             type: string
       summary: showAUser
       tags:
-      - showAUser
+      - Show a user
 swagger: "2.0"

@@ -24,12 +24,15 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 
 // @Summary insertUser
-// @ID insertUser
-// @Tags insertUser
-// @Produce plain
-// @Success 200 {string} string "Created"
+// @Description Insert a new user
+// @ID CreateUserHandler
+// @Tags Insert a new user
+// @Param request body mongo.Cv true "body json"
+// @Accept  json
+// @Produce  plain
+// @Success 200 {string} string "User created"
 // @Failure 400,404 {string} string "error"
-// @Router /insertUser [get]
+// @Router /insertUser [post]
 func insertUser(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	debugger.CheckError("Failed to read request body", err)
@@ -45,10 +48,12 @@ func insertUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // @Summary showAUser
+// @Description Show a user by username
 // @ID showAUser
-// @Tags showAUser
+// @Tags Show a user
+// @Param request body mongo.Cv true "username"
 // @Produce plain
-// @Success 200 {string} string "OK"
+// @Success 200 {string} string "success"
 // @Failure 400,404 {string} string "error"
 // @Router /users/{username} [get]
 func showAUser(w http.ResponseWriter, r *http.Request) {
@@ -66,10 +71,12 @@ func showAUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // @Summary deleteUser
+// @Description Delete a user by id
 // @ID deleteUser
-// @Tags deleteUser
+// @Tags Delete user
+// @Param request body mongo.Cv true "json"
 // @Produce plain
-// @Success 200 {string} string "OK"
+// @Success 200 {string} string "success"
 // @Failure 400,404 {string} string "error"
 // @Router /delete/{id} [delete]
 func deleteUser(w http.ResponseWriter, r *http.Request) {
@@ -83,10 +90,12 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // @Summary updateUser
-// @ID updateUser
-// @Tags updateUser
+// @Description Update a user by id
+// @ID Update user
+// @Tags Update user
+// @Param request body mongo.Cv true "json"
 // @Produce plain
-// @Success 200 {string} string "OK"
+// @Success 200 {string} string "success"
 // @Failure 400,404 {string} string "error"
 // @Router /update/{id} [put]
 func updateUser(w http.ResponseWriter, r *http.Request) {
@@ -108,11 +117,12 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
-// @Summary showUsers
-// @ID showUsers
-// @Tags showUsers
-// @Produce plain
-// @Success 200 {string} string "OK"
+// @Summary Show Users with filter
+// @Description Get all users or by query params (username, city, birthdaydate, careerobjective)
+// @ID GetAllCvsByQuery
+// @Tags Show users
+// @Param username query string false "username"
+// @Success 200 {string} []mongo.Cv "success"
 // @Failure 400,404 {string} string "error"
 // @Router /showusers [get]
 func showUsers(w http.ResponseWriter, r *http.Request) {

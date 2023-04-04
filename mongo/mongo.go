@@ -23,7 +23,6 @@ func connectToMongo() (*mongo.Client, error) {
 	return client, nil
 }
 
-
 func CreateUserHandler(cv Cv) error {
 	client, err := connectToMongo()
 	debugger.CheckError("CreateUserHandler", err)
